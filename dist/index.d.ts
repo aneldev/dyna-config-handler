@@ -9,6 +9,9 @@ export declare class DynaConfigHandler {
     readonly config: any;
     readonly c: any;
     private setDefaults(defaults?);
-    private save(humanReadable?);
-    private load(filename);
+    reset(): void;
+    save(humanReadable?: boolean): Promise<void>;
+    load(): Promise<void>;
+    delete(): Promise<boolean>;
+    private _hasFilenameInSettings(section);
 }

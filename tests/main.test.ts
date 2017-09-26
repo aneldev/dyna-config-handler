@@ -1,6 +1,8 @@
+import {IError} from "../src/Interfaces";
+
 declare let jasmine: any, describe:any, expect:any, it: any;
 
-const STRESS_TEST: boolean = true;
+const STRESS_TEST: boolean = false;
 const ITEM_TIMEOUT_MS: number = 10;
 const NORMAL_ITEMS_COUNT: number = 20;
 const STRESS_ITEMS_COUNT: number = 200;
@@ -13,21 +15,65 @@ if (typeof jasmine !== 'undefined') jasmine.DEFAULT_TIMEOUT_INTERVAL = timeout;
 
 import {DynaConfigHandler} from './../src';
 
-const ch = new DynaConfigHandler({
-  filename: './temp/myConfiguration.json',
-  defaults: {
-    lang: 'en',
-  },
-});
 
 describe('DynaConfigHandler module test', () => {
-	it('should create the instance', () => {
-		expect(ch).not.toBe(undefined);
-	});
+  const ch = new DynaConfigHandler({
+    filename: './temp/myConfiguration.json',
+    defaults: {
+      lang: 'en',
+    },
+  });
 
-	it('should have the default value', () => {
-		expect(ch.config.lang).toBe('en');
-	});
+  it('should create the instance', () => {
+    expect(ch).not.toBe(undefined);
+  });
 
+  it('should have the default value', () => {
+    expect(ch.config.lang).toBe('en');
+  });
 
+  it('should save modifications', () => {
+    ch.config.clientId = 400;
+    ch.save()
+      .then(() => {
+        expect(true).toBe(true);
+      })
+      .catch((error: IError) => {
+        expect(error).toBe(undefined);
+      });
+  });
+
+  it('should load the file, ignoring changes', () => {
+    ch.config.lang = 'de';
+    ch.config.provider = 'provider';
+    ch.load()
+      .then(() => {
+        expect(ch.config.lang).toBe('en');
+        expect(ch.config.provider).toBe(undefined);
+      })
+      .catch((error: IError) => {
+        expect(error).toBe(undefined);
+      });
+  });
+});
+
+describe('DynaConfigHandler error handling', () => {
+  const ch = new DynaConfigHandler({
+    filename: './temp/myConfigurationXXXX.json',
+    defaults: {
+      lang: 'en',
+    },
+  });
+
+  it('should not load not existed config files', (done: Function) => {
+    ch.load()
+      .then(() => {
+        expect(false).toBe(true);
+        done();
+      })
+      .catch((error: IError) => {
+        expect(error).not.toBe(null);
+        done();
+      });
+  });
 });

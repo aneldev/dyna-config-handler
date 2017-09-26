@@ -1,4 +1,4 @@
-import {loadJSON, saveJSON} from 'dyna-node-fs';
+import {loadJSON, saveJSON, mkdir, getPath, deleteFile} from 'dyna-node-fs';
 import {IError} from './interfaces';
 
 export interface ISettings {
@@ -31,26 +31,43 @@ export class DynaConfigHandler {
     return this.config;
   }
 
-  private save(humanReadable: boolean = true): Promise<void> {
-    if (!this._settings.filename) return Promise.reject({
-      section: 'DynaConfigHandler/Save',
-      message: 'filename is not defined ins the settings',
-      data: {
-        settings: this._settings
-      }
-    } as IError);
-
-
-    return saveJSON(this._settings.filename, JSON.stringify(this.config, null, humanReadable ? 2 : 0))
+  public reset(): void {
+    this._config = this._settings.defaults || {};
   }
 
-  private load(filename: string): Promise<void> {
-    if (filename) this._settings.filename = filename;
+  public save(humanReadable: boolean = true): Promise<void> {
+    return this._hasFilenameInSettings('delete')
+      .then(() => mkdir(getPath(this._settings.filename)))
+      .then(() => saveJSON(this._settings.filename, JSON.stringify(this.config, null, humanReadable ? 2 : 0)));
+  }
 
+  public load(): Promise<void> {
     return loadJSON(this._settings.filename)
       .then((data: any) => {
         this._config = data;
         this.setDefaults(this._settings.defaults)
       });
+  }
+
+  public delete(): Promise<boolean> {
+    return this._hasFilenameInSettings('delete')
+      .then(() => deleteFile(this._settings.filename));
+  }
+
+  private _hasFilenameInSettings(section: string): Promise<void> {
+    return new Promise((resolve: Function, reject: (error: IError) => void) => {
+      if (this._settings.filename) {
+        resolve();
+      }
+      else {
+        reject({
+          section: `DynaConfigHandler/${section}`,
+          message: 'filename is not defined in the settings',
+          data: {
+            settings: this._settings
+          }
+        } as IError)
+      }
+    });
   }
 }
