@@ -1,4 +1,4 @@
-import {readJSON, writeFile} from 'ts-fs-promise'
+import {loadJSON, saveJSON} from 'dyna-node-fs';
 import {IError} from './interfaces';
 
 export interface ISettings {
@@ -31,7 +31,7 @@ export class DynaConfigHandler {
     return this.config;
   }
 
-  private save(humanReadable: boolean = true): Promise<boolean> {
+  private save(humanReadable: boolean = true): Promise<void> {
     if (!this._settings.filename) return Promise.reject({
       section: 'DynaConfigHandler/Save',
       message: 'filename is not defined ins the settings',
@@ -41,13 +41,13 @@ export class DynaConfigHandler {
     } as IError);
 
 
-    return writeFile(this._settings.filename, JSON.stringify(this.config, null, humanReadable ? 2 : 0))
+    return saveJSON(this._settings.filename, JSON.stringify(this.config, null, humanReadable ? 2 : 0))
   }
 
   private load(filename: string): Promise<void> {
     if (filename) this._settings.filename = filename;
 
-    return readJSON(this._settings.filename)
+    return loadJSON(this._settings.filename)
       .then((data: any) => {
         this._config = data;
         this.setDefaults(this._settings.defaults)

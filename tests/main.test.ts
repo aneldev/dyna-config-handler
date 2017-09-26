@@ -26,7 +26,7 @@ describe('DynaConfigHandler module test', () => {
 	});
 
 	it('should have the default value', () => {
-		expect(ch.config.lang).not.toBe('en');
+		expect(ch.config.lang).toBe('en');
 	});
 
 
