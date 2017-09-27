@@ -106,8 +106,7 @@ class DynaConfigHandler {
     save(humanReadable = true) {
         if (!this._settings.filename)
             return Promise.resolve();
-        return dyna_node_fs_1.mkdir(dyna_node_fs_1.getPath(this._settings.filename))
-            .then(() => dyna_node_fs_1.saveJSON(this._settings.filename, JSON.stringify(this.config, null, humanReadable ? 2 : 0)));
+        return dyna_node_fs_1.saveJSON(this._settings.filename, this.config, true);
     }
     load() {
         if (!this._settings.filename)
