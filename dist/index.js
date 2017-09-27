@@ -86,8 +86,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dyna_node_fs_1 = __webpack_require__(1);
 class DynaConfigHandler {
     constructor(settings = {}) {
-        this._config = {};
         this._settings = settings;
+        this._config = this._settings.config || {};
         this.setDefaults(this._settings.defaults);
     }
     get config() {
@@ -104,11 +104,14 @@ class DynaConfigHandler {
         this._config = this._settings.defaults || {};
     }
     save(humanReadable = true) {
-        return this._hasFilenameInSettings('delete')
-            .then(() => dyna_node_fs_1.mkdir(dyna_node_fs_1.getPath(this._settings.filename)))
+        if (!this._settings.filename)
+            return Promise.resolve();
+        return dyna_node_fs_1.mkdir(dyna_node_fs_1.getPath(this._settings.filename))
             .then(() => dyna_node_fs_1.saveJSON(this._settings.filename, JSON.stringify(this.config, null, humanReadable ? 2 : 0)));
     }
     load() {
+        if (!this._settings.filename)
+            return Promise.resolve();
         return dyna_node_fs_1.loadJSON(this._settings.filename)
             .then((data) => {
             this._config = data;
@@ -116,24 +119,9 @@ class DynaConfigHandler {
         });
     }
     delete() {
-        return this._hasFilenameInSettings('delete')
-            .then(() => dyna_node_fs_1.deleteFile(this._settings.filename));
-    }
-    _hasFilenameInSettings(section) {
-        return new Promise((resolve, reject) => {
-            if (this._settings.filename) {
-                resolve();
-            }
-            else {
-                reject({
-                    section: `DynaConfigHandler/${section}`,
-                    message: 'filename is not defined in the settings',
-                    data: {
-                        settings: this._settings
-                    }
-                });
-            }
-        });
+        if (!this._settings.filename)
+            return Promise.resolve(false);
+        return dyna_node_fs_1.deleteFile(this._settings.filename);
     }
 }
 exports.DynaConfigHandler = DynaConfigHandler;

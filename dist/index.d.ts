@@ -1,6 +1,7 @@
 export interface ISettings {
     filename?: string;
     defaults?: any;
+    config?: any;
 }
 export declare class DynaConfigHandler {
     constructor(settings?: ISettings);
@@ -13,5 +14,4 @@ export declare class DynaConfigHandler {
     save(humanReadable?: boolean): Promise<void>;
     load(): Promise<void>;
     delete(): Promise<boolean>;
-    private _hasFilenameInSettings(section);
 }

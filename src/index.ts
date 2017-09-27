@@ -4,21 +4,22 @@ import {IError} from './interfaces';
 export interface ISettings {
   filename?: string;
   defaults?: any;
+  config?: any;
 }
 
 export class DynaConfigHandler {
   constructor(settings: ISettings = {}) {
     this._settings = settings;
+    this._config= this._settings.config || {};
     this.setDefaults(this._settings.defaults);
   }
 
   private _settings: ISettings;
 
-  public _config: any = {};
+  public _config: any;
   public get config(): any {
     return this._config;
   }
-
   public get c(): any {
     return this._config;
   }
@@ -36,12 +37,14 @@ export class DynaConfigHandler {
   }
 
   public save(humanReadable: boolean = true): Promise<void> {
-    return this._hasFilenameInSettings('delete')
-      .then(() => mkdir(getPath(this._settings.filename)))
-      .then(() => saveJSON(this._settings.filename, JSON.stringify(this.config, null, humanReadable ? 2 : 0)));
+    if (!this._settings.filename) return Promise.resolve();
+
+    return saveJSON(this._settings.filename, this.config, true);
   }
 
   public load(): Promise<void> {
+    if (!this._settings.filename) return Promise.resolve();
+
     return loadJSON(this._settings.filename)
       .then((data: any) => {
         this._config = data;
@@ -50,24 +53,8 @@ export class DynaConfigHandler {
   }
 
   public delete(): Promise<boolean> {
-    return this._hasFilenameInSettings('delete')
-      .then(() => deleteFile(this._settings.filename));
-  }
+    if (!this._settings.filename) return Promise.resolve(false);
 
-  private _hasFilenameInSettings(section: string): Promise<void> {
-    return new Promise((resolve: Function, reject: (error: IError) => void) => {
-      if (this._settings.filename) {
-        resolve();
-      }
-      else {
-        reject({
-          section: `DynaConfigHandler/${section}`,
-          message: 'filename is not defined in the settings',
-          data: {
-            settings: this._settings
-          }
-        } as IError)
-      }
-    });
+    return deleteFile(this._settings.filename);
   }
 }
