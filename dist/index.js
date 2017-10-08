@@ -96,8 +96,8 @@ class DynaConfigHandler {
     get c() {
         return this._config;
     }
-    setDefaults(defaults = {}) {
-        this._config = Object.assign({}, defaults, this._config);
+    setDefaults(defaults) {
+        this._config = Object.assign({}, (defaults || {}), this._config);
         return this.config;
     }
     reset() {

@@ -77,3 +77,36 @@ describe('DynaConfigHandler error handling', () => {
       });
   });
 });
+
+describe('DynaConfigHandler error handling with specific interface', () => {
+  interface IPerson {
+    name: string;
+    age: number;
+  }
+
+  const ch = new DynaConfigHandler<IPerson>({
+    filename: './temp/myConfigurationXXXX.json',
+    defaults: {
+      name: 'Lory',
+      age: 33,
+    },
+  });
+
+  it('should not load not existed config files', (done: Function) => {
+    ch.load()
+      .then(() => {
+        expect(false).toBe(true);
+        done();
+      })
+      .catch((error: IError) => {
+        expect(error).not.toBe(null);
+        done();
+      });
+  });
+
+  it('shoult have the default values', () => {
+    expect(ch.c.name).toBe('Lory');
+    expect(ch.c.age).toBe(33);
+  });
+
+});

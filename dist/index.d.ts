@@ -1,15 +1,15 @@
-export interface ISettings {
+export interface ISettings<C> {
     filename?: string;
-    defaults?: any;
-    config?: any;
+    defaults?: C;
+    config?: C;
 }
-export declare class DynaConfigHandler {
-    constructor(settings?: ISettings);
+export declare class DynaConfigHandler<C> {
+    constructor(settings?: ISettings<C>);
     private _settings;
-    _config: any;
+    private _config;
     readonly config: any;
     readonly c: any;
-    private setDefaults(defaults?);
+    private setDefaults(defaults);
     reset(): void;
     save(humanReadable?: boolean): Promise<void>;
     load(): Promise<void>;

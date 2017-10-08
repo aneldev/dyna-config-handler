@@ -1,22 +1,22 @@
 import {loadJSON, saveJSON, mkdir, getPath, deleteFile} from 'dyna-node-fs';
 import {IError} from './interfaces';
 
-export interface ISettings {
+export interface ISettings<C> {
   filename?: string;
-  defaults?: any;
-  config?: any;
+  defaults?: C;
+  config?: C;
 }
 
-export class DynaConfigHandler {
-  constructor(settings: ISettings = {}) {
+export class DynaConfigHandler<C> {
+  constructor(settings: ISettings<C> = {}) {
     this._settings = settings;
-    this._config= this._settings.config || {};
-    this.setDefaults(this._settings.defaults);
+    this._config= this._settings.config || ({} as C);
+    this._setDefaults(this._settings.defaults);
   }
 
-  private _settings: ISettings;
+  private _settings: ISettings<C>;
 
-  public _config: any;
+  private _config: C;
   public get config(): any {
     return this._config;
   }
@@ -24,16 +24,16 @@ export class DynaConfigHandler {
     return this._config;
   }
 
-  private setDefaults(defaults: any = {}): any {
+  private _setDefaults(defaults: C): C {
     this._config = {
-      ...defaults,
-      ...this._config,
+      ...(defaults || {}),
+      ...(this._config as any),
     };
     return this.config;
   }
 
   public reset(): void {
-    this._config = this._settings.defaults || {};
+    this._config = this._settings.defaults || ({} as C);
   }
 
   public save(humanReadable: boolean = true): Promise<void> {
@@ -48,7 +48,7 @@ export class DynaConfigHandler {
     return loadJSON(this._settings.filename)
       .then((data: any) => {
         this._config = data;
-        this.setDefaults(this._settings.defaults)
+        this._setDefaults(this._settings.defaults)
       });
   }
 
