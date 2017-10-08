@@ -1,5 +1,4 @@
 import {loadJSON, saveJSON, mkdir, getPath, deleteFile} from 'dyna-node-fs';
-import {IError} from './interfaces';
 
 export interface ISettings<C> {
   filename?: string;

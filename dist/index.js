@@ -88,7 +88,7 @@ class DynaConfigHandler {
     constructor(settings = {}) {
         this._settings = settings;
         this._config = this._settings.config || {};
-        this.setDefaults(this._settings.defaults);
+        this._setDefaults(this._settings.defaults);
     }
     get config() {
         return this._config;
@@ -96,7 +96,7 @@ class DynaConfigHandler {
     get c() {
         return this._config;
     }
-    setDefaults(defaults) {
+    _setDefaults(defaults) {
         this._config = Object.assign({}, (defaults || {}), this._config);
         return this.config;
     }
@@ -114,7 +114,7 @@ class DynaConfigHandler {
         return dyna_node_fs_1.loadJSON(this._settings.filename)
             .then((data) => {
             this._config = data;
-            this.setDefaults(this._settings.defaults);
+            this._setDefaults(this._settings.defaults);
         });
     }
     delete() {

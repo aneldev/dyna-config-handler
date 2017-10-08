@@ -9,7 +9,7 @@ export declare class DynaConfigHandler<C> {
     private _config;
     readonly config: any;
     readonly c: any;
-    private setDefaults(defaults);
+    private _setDefaults(defaults);
     reset(): void;
     save(humanReadable?: boolean): Promise<void>;
     load(): Promise<void>;
