@@ -1,10 +1,10 @@
-export interface ISettings<C> {
+export interface IConfiguration<C> {
     filename?: string;
     defaults?: C;
     config?: C;
 }
 export declare class DynaConfigHandler<C> {
-    constructor(settings?: ISettings<C>);
+    constructor(settings?: IConfiguration<C>);
     private _settings;
     private _config;
     readonly config: any;

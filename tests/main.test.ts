@@ -11,10 +11,7 @@ const ITEMS_COUNT: number = STRESS_TEST && STRESS_ITEMS_COUNT || NORMAL_ITEMS_CO
 const timeout = (STRESS_TEST && STRESS_ITEMS_COUNT || 1) * ITEM_TIMEOUT_MS;
 if (typeof jasmine !== 'undefined') jasmine.DEFAULT_TIMEOUT_INTERVAL = timeout;
 
-// help: https://facebook.github.io/jest/docs/expect.html
-
 import {DynaConfigHandler} from './../src';
-
 
 describe('DynaConfigHandler module test', () => {
   const ch = new DynaConfigHandler({

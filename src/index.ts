@@ -1,19 +1,19 @@
-import {loadJSON, saveJSON, mkdir, getPath, deleteFile} from 'dyna-node-fs';
+import {loadJSON, saveJSON, deleteFile} from 'dyna-node-fs';
 
-export interface ISettings<C> {
+export interface IConfiguration<C> {
   filename?: string;
   defaults?: C;
   config?: C;
 }
 
 export class DynaConfigHandler<C> {
-  constructor(settings: ISettings<C> = {}) {
+  constructor(settings: IConfiguration<C> = {}) {
     this._settings = settings;
     this._config= this._settings.config || ({} as C);
     this._setDefaults(this._settings.defaults);
   }
 
-  private _settings: ISettings<C>;
+  private _settings: IConfiguration<C>;
 
   private _config: C;
   public get config(): any {

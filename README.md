@@ -37,6 +37,17 @@ ch.save(); // return promise
 
 ```
 
+# Constructor, configuration of the `dyna-config-handler`
+
+The constructor accepts one configuration object of this interface:
+```
+IConfiguration<C> {		// where C is your interface of your configuration
+  filename?: string;
+  defaults?: C;
+  config?: C;
+}
+```
+
 # Methods
 
 ## reset(): void
@@ -51,8 +62,7 @@ Saves the configuration.
 
 Loads the configuration from the `filename` defined in the constructor.
 
-_Why to load really? It is already loaded from constructor._
-_But for any reason, if you want to re-load it this is the method._
+You in the `IConfiguration` you defined `filename` you habe to call this in order to load the configuration.
 
 Note: the `config` object is replaced with this.
 
