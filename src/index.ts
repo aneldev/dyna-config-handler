@@ -16,10 +16,10 @@ export class DynaConfigHandler<C> {
   private _settings: IConfiguration<C>;
 
   private _config: C;
-  public get config(): any {
+  public get config(): C {
     return this._config;
   }
-  public get c(): any {
+  public get c(): C {
     return this._config;
   }
 

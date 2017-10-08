@@ -7,8 +7,8 @@ export declare class DynaConfigHandler<C> {
     constructor(settings?: IConfiguration<C>);
     private _settings;
     private _config;
-    readonly config: any;
-    readonly c: any;
+    readonly config: C;
+    readonly c: C;
     private _setDefaults(defaults);
     reset(): void;
     save(humanReadable?: boolean): Promise<void>;
