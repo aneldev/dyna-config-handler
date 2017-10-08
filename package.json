@@ -1,6 +1,6 @@
 {
   "name": "dyna-config-handler",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Simplifies the configuration handling in json files for node-js applications",
   "repository": {
     "type": "git",
