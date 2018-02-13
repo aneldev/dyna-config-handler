@@ -82,47 +82,67 @@ return /******/ (function(modules) { // webpackBootstrap
 
 "use strict";
 
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const dyna_node_fs_1 = __webpack_require__(1);
-class DynaConfigHandler {
-    constructor(settings = {}) {
+var dyna_node_fs_1 = __webpack_require__(1);
+var DynaConfigHandler = /** @class */ (function () {
+    function DynaConfigHandler(settings) {
+        if (settings === void 0) { settings = {}; }
         this._settings = settings;
         this._config = this._settings.config || {};
         this._setDefaults(this._settings.defaults);
     }
-    get config() {
-        return this._config;
-    }
-    get c() {
-        return this._config;
-    }
-    _setDefaults(defaults) {
-        this._config = Object.assign({}, (defaults || {}), this._config);
+    Object.defineProperty(DynaConfigHandler.prototype, "config", {
+        get: function () {
+            return this._config;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DynaConfigHandler.prototype, "c", {
+        get: function () {
+            return this._config;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    DynaConfigHandler.prototype._setDefaults = function (defaults) {
+        this._config = __assign({}, (defaults || {}), this._config);
         return this.config;
-    }
-    reset() {
+    };
+    DynaConfigHandler.prototype.reset = function () {
         this._config = this._settings.defaults || {};
-    }
-    save(humanReadable = true) {
+    };
+    DynaConfigHandler.prototype.save = function (humanReadable) {
+        if (humanReadable === void 0) { humanReadable = true; }
         if (!this._settings.filename)
             return Promise.resolve();
         return dyna_node_fs_1.saveJSON(this._settings.filename, this.config, true);
-    }
-    load() {
+    };
+    DynaConfigHandler.prototype.load = function () {
+        var _this = this;
         if (!this._settings.filename)
             return Promise.resolve();
         return dyna_node_fs_1.loadJSON(this._settings.filename)
-            .then((data) => {
-            this._config = data;
-            this._setDefaults(this._settings.defaults);
+            .then(function (data) {
+            _this._config = data;
+            _this._setDefaults(_this._settings.defaults);
         });
-    }
-    delete() {
+    };
+    DynaConfigHandler.prototype.delete = function () {
         if (!this._settings.filename)
             return Promise.resolve(false);
         return dyna_node_fs_1.deleteFile(this._settings.filename);
-    }
-}
+    };
+    return DynaConfigHandler;
+}());
 exports.DynaConfigHandler = DynaConfigHandler;
 
 
